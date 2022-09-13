@@ -46,34 +46,15 @@ public class Server {
   private static void getRequests(ServerSocket s) {
       for (;;) {
           try {
+              Socket cl = s.accept();
+              
               String[] words = {"animal", "perro", "gato", "vaca", "cerdo", "pecho", "cintura", "cadera"};
               
               int x = (int)(Math.random()*(words.length)+1);
               
-              String word = words[x];
-              Socket cl = s.accept();
-              
               PrintWriter pw = new PrintWriter( new OutputStreamWriter(cl.getOutputStream()));
-              pw.println(word.length()); // Send the String length
-              //Receive letters
-              
-              boolean end = false;
-              
-              BufferedReader br = new BufferedReader(new InputStreamReader(cl.getInputStream()));
-              
-              while(!end) {
-                  String letra = br.readLine();
-                  System.out.println("RECV: " + letra);
-                  
-                  if(letra == "-1"){
-                      end = true;
-                  }else {
-                      pw.print(word.indexOf(letra));
-                  }
-              }
-              
-              br.close();
-              //Validatation loop
+              pw.println(words[x]); // Send the word
+                            
               pw.close();
               cl.close();
               

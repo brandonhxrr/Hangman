@@ -36,62 +36,50 @@ public class Client {
         
         BufferedReader br = new BufferedReader(new InputStreamReader(cl.getInputStream()));
         
-        int length = Integer.parseInt(br.readLine());
+        String word =br.readLine();
         
-        char[] hidden = new char[length];
+        char[] hidden = new char[word.length()];
         boolean guessed = false;
+        int attemps = word.length();
         
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < word.length(); i++) {
             hidden[i] = '_';
         }
         
-        System.out.println("LONG: " + String.valueOf(length));
-        
-        PrintWriter pw = new PrintWriter( new OutputStreamWriter(cl.getOutputStream()));
-        
-        
-        
         String guess = "";
         
-        while(length > 0 && !guessed){
-            System.out.println("Adivina la palabra: ");
-            System.out.println("Número de vidas: " + String.valueOf(length));
+        boolean found;
+        int charFound = 0;        
+        
+        while(attemps > 0 && charFound != word.length()){
+            found = false;
+            
+            System.out.println("\nAdivina la palabra: ");
+            System.out.println("Número de vidas: " + String.valueOf(attemps));
             System.out.println(Arrays.toString(hidden) + "\n");
-            System.out.println("Ingresa una letra: ");
+            System.out.print("Ingresa una letra: ");
             char letra = sc.next().charAt(0);
-            pw.print(letra);
             
-            int answer = Integer.parseInt(br.readLine());
-            
-            
-            
-            if(answer == -1){
-                length -= 1;
-            }else {
-                hidden[answer] = letra;
+            for (int i = 0; i < hidden.length; i++) {
+                if(letra == word.charAt(i)) {
+                    hidden[i] = letra;
+                    found = true;
+                    charFound += 1;
+                }                
             }
             
-            guessed = !Arrays.asList(hidden).contains('_');
+            if(!found) attemps -= 1;            
             
         }
         
-        if(guessed) {
-            System.out.println("!Felicidades!");
+        if(charFound == word.length()) {
+            System.out.println("\n!Felicidades!");
+            System.out.println(Arrays.toString(hidden) + "\n");
         }else {
             System.out.println("Suerte para la próxima ):");
         }
-        
-        pw.print("-1");
-        
-        
-        
-        
-        
-        //Receive letters
-        //Validatation loop
-        
+              
         br.close();
-        pw.close();
         cl.close();
         
         
